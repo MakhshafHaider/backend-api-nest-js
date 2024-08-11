@@ -1,0 +1,4 @@
+apps:
+  - name: sam-api
+    script: npm
+    args: start

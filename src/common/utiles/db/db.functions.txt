@@ -1,0 +1,76 @@
+DROP procedure IF EXISTS `get_product_Advocate_jobs`;
+
+DELIMITER $$
+
+CREATE PROCEDURE `get_product_Advocate_jobs` (IN Id char(20))
+BEGIN
+
+SELECT *,j.Id  as job_id FROM `job` j 
+INNER JOIN `prescriber` p ON p.SalesforceId=j.Prescriber 
+where j.Product_Advocate = Id and Status != "Job cancelled";
+
+
+END$$
+
+DELIMITER ;
+
+=======================================================================================================
+
+DROP procedure IF EXISTS `get_prescriber_jobs_for_address`;
+
+
+DELIMITER $$
+
+CREATE PROCEDURE `get_prescriber_jobs_for_address` ()
+BEGIN
+
+SELECT *
+FROM `job` j 
+INNER JOIN `prescriber` p ON p.Id = j.Prescriber_Id
+WHERE ( feedback_submitted_at = DATE_SUB(NOW(), INTERVAL 30 DAY) AND question_13 = false AND Status != 'Job cancelled' )
+OR (Status = 'Assigned' AND Status != 'Job cancelled');
+
+END$$
+
+DELIMITER ;
+
+=======================================================================================================
+
+DROP procedure IF EXISTS `get_product_advocate_jobs_by_id`;
+
+DELIMITER $$
+
+CREATE PROCEDURE `get_product_advocate_jobs_by_id` (IN Id integer)
+BEGIN
+
+SELECT *,j.Id  as job_id FROM `job` j 
+INNER JOIN `product_advocate` p ON p.Id =j.Product_Advocate_Id 
+where j.Product_Advocate_Id = Id;
+
+
+END$$
+
+DELIMITER ;
+
+=======================================================================================================
+
+
+CREATE PROCEDURE `get_product_advocate_jobs_by_id` (IN Id integer)
+BEGIN
+
+SELECT 
+*,j.Id as Job_Id, j.Product_Advocate_Id as  ProductAdvocateId, p.Name  as Product_Advocate_Name,p.Email  as Product_Advocate_Email,
+j.Prescriber_Id as  PrescriberId, pa.Name  as Prescriber_Name, pa.Street_Address  as Prescriber_Address
+FROM `job` j 
+INNER JOIN `product_advocate` p ON p.Id =j.Product_Advocate_Id 
+INNER JOIN `prescriber` pa ON pa.Id =j.Prescriber_Id 
+where j.Product_Advocate_Id = Id;
+
+
+END$$
+
+DELIMITER ;
+
+Call get_product_advocate_jobs_by_id(28);
+
+=======================================================================================================
