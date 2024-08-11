@@ -4,6 +4,10 @@ import CallLogs from "src/common/utiles/entity/calllogs.entity";
 import { TelePrescribers } from "src/common/utiles/entity/tele_prescreibers.entity";
 import { Repository } from "typeorm";
 
+function newApp(){
+  console.log("hello");
+  
+}
 @Injectable()
 export class TelePrescribersService {
   constructor(
